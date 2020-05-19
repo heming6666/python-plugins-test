@@ -6,27 +6,21 @@
 ## 功能
 - `plugin` 模拟核心包
 - `plugin-gitee` 模拟 gitee 插件包
-- `plugin-gitlab` 模拟 gitlab 插件包。
+- `plugin-gitlab` 模拟 gitlab 插件包
 
 目前实现效果为：三个包独立打包发布，在`plugin` 核心包运行时可自动发现、加载插件包的相关类。
 
 ## 运行
+
 ```bash
 git clone git@github.com:heming6666/python-plugins-test.git
 cd python-plugins-test
 
-cd plugin-gitee
-python3 setup.py develop
-
-cd ../plugin-gitlab
-python3 setup.py develop
-
-cd ../plugin
-python3 setup.py develop
-
-cd ..
-python3 test.py
+sudo bash run.sh
 ```
+
+或者可参考 [run.sh](https://github.com/heming6666/python-plugins-test/blob/master/run.sh) 脚本内容手动运行。
+
 
 运行结果：
 ```
@@ -88,3 +82,6 @@ Hello world from GitlabEnrich
     __init__.py
   - setup.py  
  ``` 
+
+ ## 插件自动发现/加载机制说明
+ TBD
