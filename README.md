@@ -85,3 +85,8 @@ Hello world from GitlabEnrich
 
  ## 插件自动发现/加载机制说明
  TBD
+
+ ## 参考资料
+ - https://packaging.python.org/guides/creating-and-discovering-plugins/#using-package-metadata
+ - https://www.geeksforgeeks.org/how-to-dynamically-load-modules-or-classes-in-python/
+ - https://stackoverflow.com/questions/2724260/why-does-pythons-import-require-fromlist
