@@ -1,27 +1,22 @@
 #!/bin/bash
-echo "========Installing python3-venv dependence ...========"
+echo "======================Seting up python-plugins-test vitural environment ...======================"
 apt-get -y install  python3-venv
-echo "========Seting up python-plugins-test vitural environment ...========"
 python3 -m venv ~/venvs/python-plugins-test
 source ~/venvs/python-plugins-test/bin/activate
-echo "========Installing setuptools dependence ...========"
 pip3 install --upgrade pip setuptools wheel
 
-echo "========Entering plugin-gitee directory...========"
+echo "======================Packaging plugin-gitee ...======================"
 cd plugin-gitee
-echo "========Packaging plugin-gitee...========"
 python3 setup.py develop
 
-echo "========Entering plugin-gitlab directory...========"
+echo "======================Packaging plugin-gitlab...======================"
 cd ../plugin-gitlab
-echo "========Packaging plugin-gitlab...========"
 python3 setup.py develop
 
-echo "========Entering plugin directory...========"
-cd ../plugin
-echo "========Packaging plugin...========"
+echo "======================Packaging core...======================"
+cd ../core
 python3 setup.py develop
 
-echo "========Running test...========"
+echo "======================Running test...======================"
 cd ..
 python3 test.py
