@@ -1,3 +1,3 @@
 class GiteeEnrich():
-  def __init__(self):
-    print("Hello world from GiteeEnrich")
+    def __init__(self):
+        print("Hello world from GiteeEnrich")

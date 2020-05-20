@@ -6,4 +6,3 @@ from .raw.gitee import GiteeOcean
 
 def get_connectors():
     return {"gitee": [GiteeOcean, GiteeEnrich]}
-

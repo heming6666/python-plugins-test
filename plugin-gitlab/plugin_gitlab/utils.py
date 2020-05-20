@@ -6,4 +6,3 @@ from .raw.gitlab import GitLabOcean
 
 def get_connectors():
     return {"gitlab": [GitLabOcean, GitLabEnrich]}
-
