@@ -1,3 +1,3 @@
-class GitlabOcean():
+class GitLabOcean():
   def __init__(self):
-    print("Hello world from GitlabOcean")
+    print("Hello world from GitLabOcean")

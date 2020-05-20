@@ -1,3 +1,3 @@
-class GitlabEnrich():
+class GitLabEnrich():
   def __init__(self):
-    print("Hello world from GitlabEnrich")
+    print("Hello world from GitLabEnrich")

@@ -1,4 +1,4 @@
-from plugin.util import get_connectors
+from plugin.utils import get_connectors
 
 print("====git=====")
 git = get_connectors()["git"][0]()
