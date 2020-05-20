@@ -1,92 +1,97 @@
 # python-plugins-test
-本仓库用于测试 Python 插件的自动发现与加载。
 
-关联 issue: https://github.com/X-lab2017/grimoirelab-elk/issues/3
+Dynamically discover and load plugins.
 
-## 功能
-- `plugin` 模拟核心包
-- `plugin-gitee` 模拟 gitee 插件包
-- `plugin-gitlab` 模拟 gitlab 插件包
+## Describiton
 
-目前实现效果为：三个包独立打包发布，在`plugin` 核心包运行时可自动发现、加载插件包的相关类。
+There are three packages: [`core`](./core), [`plugin-gitee`](./plugin-gitee) and [`plugin-gitlab`](./plugin-gitlab), which are distributed separately.
 
-## 运行
+-   `core` implements the core logic and includes some default backends(e.g. `git` and `github`)
+-   `plugin-gitee` provides extra feature of `gitee` backend
+-   `plugin-gitlab` provides extra feature of `gitlab` backend
+
+### plugins
+
+[`plugin-gitee`](./plugin-gitee/setup.py) and [`plugin-gitlab`](./plugin-gitlab/setup.py) register themselves for discovery by adding the `entry_points` argument to `setup()` in `setup.py`.
+
+```python
+setup(name="plugin_gitee",
+      description="This is plugin_gitee",
+      packages=["plugin_gitee", "plugin_gitee.raw", "plugin_gitee.enriched"],
+      entry_points={"plugin": "gitee = plugin_gitee"},
+      )
+```
+
+```python
+setup(name="plugin_gitlab",
+      description="This is plugin_gitlab",
+      packages=["plugin_gitlab", "plugin_gitlab.raw",
+                "plugin_gitlab.enriched"],
+      entry_points={"plugin": "gitlab = plugin_gitlab"},
+      )
+```
+
+### core
+
+[`core`](./core/core/utils) can automatically discover the registered entry points by using `pkg_resources.iter_entry_points()` and dynamically load modules of plugins by using ` __import__()` and `getattr()` method.
+
+In this case, `plugin-gitee` exports the `gitee connectors` by `get_connectors()` in [`utils.py`](./plugin-gitee/plugin_gitee/utils.py):
+
+```python
+# Connectors for EnrichOcean
+from .enriched.gitee import GiteeEnrich
+# Connectors for Ocean
+from .raw.gitee import GiteeOcean
+
+def get_connectors():
+    return {"gitee": [GiteeOcean, GiteeEnrich]}
+```
+
+And [`plugin-gitlab`](./plugin-gitlab/plugin_gitlab/utils.py) does the same thing.
+
+While `core` will import all of the `connectors` provided by plugins in [`utils.py`](./core/core/utils.py):
+
+```python
+PLUGIN_PREFIX = "plugin"
+def get_connectors():
+    connectors = {"git": [GitOcean, GitEnrich]}
+    for plugin in pkg_resources.iter_entry_points(PLUGIN_PREFIX):
+        backend = plugin.name
+        module_name = PLUGIN_PREFIX + "_" + backend + ".utils"
+        module = __import__(module_name, fromlist=["get_connectors"])
+        connectors.update(getattr(module, "get_connectors")())
+    return connectors
+```
+
+Finally, you can get all of the `connectors`:
+
+```python
+from core.utils import get_connectors
+connectors = get_connectors()
+```
+
+The result looks like:
+
+    {
+      "git": [GitOcean, GitEnrich],
+      "gitee": [GiteeOcean, GiteeEnrich],
+      "gitlab": [GitlabOcean, GitlabEnrich]
+      ...
+    }
+
+## How to run
 
 ```bash
 git clone git@github.com:heming6666/python-plugins-test.git
 cd python-plugins-test
-
 sudo bash run.sh
 ```
 
-或者可参考 [run.sh](https://github.com/heming6666/python-plugins-test/blob/master/run.sh) 脚本内容手动运行。
+## Note
+**The entry points should be well defined in advance if using package metadata to do the automatic plugin discovery.**
 
+## Reference
 
-运行结果：
-```
-====git=====
-Hello world from GitOcean
-<plugin.raw.git.GitOcean object at 0x7f64226cbb70>
-Hello world from GitEnrich
-<plugin.enriched.git.GitEnrich object at 0x7f64226cb8d0>
-====gitee=====
-Hello world from GiteeOcean
-<plugin_gitee.raw.gitee.GiteeOcean object at 0x7f64226cbe10>
-Hello world from GiteeEnrich
-<plugin_gitee.enriched.gitee.GiteeEnrich object at 0x7f64226cb898>
-====gitlab=====
-Hello world from GitlabOcean
-<plugin_gitlab.raw.gitlab.GitlabOcean object at 0x7f641fa8ed68>
-Hello world from GitlabEnrich
-<plugin_gitlab.enriched.gitlab.GitlabEnrich object at 0x7f641fa8eda0>
-```
-
-## 目录说明
-
-```
-- plugin  模拟 grimoirelab-elk 目录
-  - plugin 模拟 grimoire_elk 目录
-    - enriched
-      -  __init__.py
-      - git.py 模拟 grimoire_elk/enriched 下默认核心backend
-    - raw
-      -  __init__.py
-      - git.py 模拟 grimoire_elk/raw 下默认核心backend
-    - __init__.py 
-    - util.py 模拟 grimoire_elk/util 文件
-  - setup.py  
- ``` 
-
-```
-- plugin-gitee  模拟 grimoirelab-elk-gitee 目录
-  - plugi-gitee 模拟 grimoire_elk_gitee 目录
-    - enriched
-      -  __init__.py
-      - gitee.py 模拟 grimoire_elk/enriched 下 gitee backend
-    - raw
-      -  __init__.py
-      - gitee.py 模拟 grimoire_elk/raw 下 gitee backend
-    __init__.py
-  - setup.py  
-``` 
-
-```
-- plugin-gitlab  模拟 grimoirelab-elk-gitlab 目录
-  - plugin-gitlab 模拟 grimoire_elk_gitlab 目录
-    - enriched
-      -  __init__.py
-      - gitlab.py 模拟 grimoire_elk/enriched 下 gitlab backend
-    - raw
-      -  __init__.py
-      - git.py 模拟 grimoire_elk/raw 下 gitlab backend
-    __init__.py
-  - setup.py  
- ``` 
-
- ## 插件自动发现/加载机制说明
- TBD
-
- ## 参考资料
- - https://packaging.python.org/guides/creating-and-discovering-plugins/#using-package-metadata
- - https://www.geeksforgeeks.org/how-to-dynamically-load-modules-or-classes-in-python/
- - https://stackoverflow.com/questions/2724260/why-does-pythons-import-require-fromlist
+-   <https://packaging.python.org/guides/creating-and-discovering-plugins/#using-package-metadata>
+-   <https://www.geeksforgeeks.org/how-to-dynamically-load-modules-or-classes-in-python/>
+-   <https://stackoverflow.com/questions/2724260/why-does-pythons-import-require-fromlist>
