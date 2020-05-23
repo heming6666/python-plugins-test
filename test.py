@@ -1,4 +1,4 @@
-from core.utils import get_connectors
+from grimoire_elk.utils import get_connectors
 
 print("====git=====")
 git = get_connectors()["git"][0]()

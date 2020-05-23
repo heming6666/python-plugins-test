@@ -5,16 +5,16 @@ python3 -m venv ~/venvs/python-plugins-test
 source ~/venvs/python-plugins-test/bin/activate
 pip3 install --upgrade pip setuptools wheel
 
-echo "======================Packaging plugin-gitee ...======================"
-cd plugin-gitee
+echo "======================Packaging grimoirelab-elk-gitee ...======================"
+cd grimoirelab-elk-gitee
 python3 setup.py develop
 
-echo "======================Packaging plugin-gitlab...======================"
-cd ../plugin-gitlab
+echo "======================Packaging grimoirelab-elk-gitlab...======================"
+cd ../grimoirelab-elk-gitlab
 python3 setup.py develop
 
-echo "======================Packaging core...======================"
-cd ../core
+echo "======================Packaging grimoirelab-elk...======================"
+cd ../grimoirelab-elk
 python3 setup.py develop
 
 echo "======================Running test...======================"
