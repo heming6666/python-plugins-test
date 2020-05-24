@@ -1,9 +1,12 @@
 from setuptools import setup
 
-setup(name="plugin_gitee",
-      description="This is plugin_gitee",
+setup(name="grimoire-elk-gitee",
+      description="This is grimoire-elk-gitee",
       version="0.1.0",
-      packages=["plugin_gitee", "plugin_gitee.raw", "plugin_gitee.enriched"],
-      entry_points={"plugin": "gitee = plugin_gitee"},
-      setup_requires=['wheel']
+      packages=['grimoire_elk', 'grimoire_elk.enriched', 'grimoire_elk.raw'],
+      namespace_packages=['grimoire_elk',
+                          'grimoire_elk.enriched',
+                          'grimoire_elk.raw'],
+      setup_requires=['wheel'],
+      zip_safe=False
       )
