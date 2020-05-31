@@ -2,7 +2,7 @@
 
 Dynamically discover and load plugins.
 
-## Describiton
+## Describtion
 
 There are two packages: [`grimoirelab-elk`](./grimoirelab-elk) and [`grimoirelab-elk-gitee`](./grimoirelab-elk-gitee), which are distributed separately.
 
@@ -21,7 +21,7 @@ setup(name="grimoire-elk-gitee",
       )
 ```
 
-On the other hand,`grimoirelab-elk-gitee` exports the `gitee connectors` by `get_connectors()` in [`utils.py`](./grimoirelab-elk-gitee/grimoirelab_elk_gitee/utils.py):
+On the other hand, it exports the `connectors` by `get_connectors()` in [`utils.py`](./grimoirelab-elk-gitee/grimoire_elk_gitee/utils.py):
 
 ```python
 # Connectors for EnrichOcean
@@ -35,7 +35,7 @@ def get_connectors():
 
 ### core
 
-[`grimoirelab-elk`](./grimoirelab-elk/grimoirelab_elk/utils) can automatically discover the registered entry points by using `pkg_resources.iter_entry_points()` and import all of the `connectors` provided by plugins in [`utils.py`](./core/core/utils.py):
+`grimoirelab-elk` can automatically discover the registered entry points by using `pkg_resources.iter_entry_points()` and load all of the `connectors` provided by plugins in [`utils.py`](./grimoirelab-elk/grimoire_elk/utils.py):
 
 ```python
 def get_connectors():
