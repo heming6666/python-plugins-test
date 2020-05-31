@@ -41,7 +41,6 @@ def get_connectors():
 def get_connectors():
     connectors = {"git": [GitOcean, GitEnrich]}
     for entry_point in pkg_resources.iter_entry_points('grimoire_elk'):
-        print(entry_point.load())
         connectors.update(entry_point.load()())
     return connectors
 ```
