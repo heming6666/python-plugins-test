@@ -1,9 +1,10 @@
 from .raw.git import GitOcean
-from .raw.gitee import GiteeOcean
 from .enriched.git import GitEnrich
-from .enriched.gitee import GiteeEnrich
-
+import pkg_resources
 
 def get_connectors():
-
-    return {"git": [GitOcean, GitEnrich], "gitee": [GiteeOcean, GiteeEnrich]}
+    connectors = {"git": [GitOcean, GitEnrich]}
+    for entry_point in pkg_resources.iter_entry_points('grimoire_elk'):
+        print(entry_point.load())
+        connectors.update(entry_point.load()())
+    return connectors

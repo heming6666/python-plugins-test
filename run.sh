@@ -9,10 +9,6 @@ echo "======================Packaging grimoirelab-elk-gitee ...=================
 cd grimoirelab-elk-gitee
 python3 setup.py develop
 
-echo "======================Packaging grimoirelab-elk-gitlab...======================"
-cd ../grimoirelab-elk-gitlab
-python3 setup.py develop
-
 echo "======================Packaging grimoirelab-elk...======================"
 cd ../grimoirelab-elk
 python3 setup.py develop
